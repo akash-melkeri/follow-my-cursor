@@ -1,15 +1,19 @@
 class FollowMyCursor {
-  constructor(id, custom_config = {}) {
+  constructor(id, customConfig = {}) {
     // Global variables
     this.targetElement = null
-    this.cursor = {
-      mouseX: window.innerWidth / 2,
-      mouseY: window.innerHeight / 2,
-      interpolatedX: window.innerWidth / 2,
-      interpolatedY: window.innerHeight / 2,
-    };
     this.config = {
       delay: 0.1,
+      startPosition:{
+        X:window.innerWidth / 2,
+        Y:window.innerHeight / 2,
+      }
+    };
+    this.cursor = {
+      mouseX: this.config.startPosition.X,
+      mouseY: this.config.startPosition.y,
+      interpolatedX: this.config.startPosition.X,
+      interpolatedY: this.config.startPosition.y,
     };
     // functions
     this.updateMousePosition = (event) => {
@@ -27,10 +31,38 @@ class FollowMyCursor {
       requestAnimationFrame(this.updateBlobPosition)
     };
 
-    this.get_invalid_keys = (custom_config) => {
+    this.validateConfig = (customConfig) => {
       const keys1 = Object.keys(this.config)
-      const keys2 = Object.keys(custom_config)
-      return keys2.filter((e) => !keys1.includes(e))
+      const keys2 = Object.keys(customConfig)
+      let invalidKeys = keys2.filter((e) => !keys1.includes(e))
+      let noError = true
+      if(invalidKeys.length){
+        console.error(`Config has invalid keys: ${invalidKeys}.`)
+        noError = noError && false
+      }
+      let customConfigKeys = Object.keys(customConfig)
+      if(customConfigKeys.includes('delay')){
+        if(typeof customConfig.delay == 'number'){
+          console.error(`Delay value must be a number.`)
+          noError = noError && false
+        }else if(customConfig.delay < 0 && customConfig.delay > 1){
+          console.error(`Delay value must be within range 0 to 1. (floating values are allowed.)`)
+          noError = noError && false
+        }else{
+          this.config.delay = customConfig.delay
+        }
+      }
+      if(customConfigKeys.includes('startPosition')){
+        if(typeof customConfig.startPosition == 'object'){
+          console.error(`Start position value must be an object.`)
+          noError = noError && false
+        }else if(typeof customConfig.startPosition.X == 'number' && typeof customConfig.startPosition.Y == 'number'){
+          console.error(`Start position values(X, Y) must be numbers.`)
+          noError = noError && false
+        }else{
+          this.config.startPosition = customConfig.startPosition
+        }
+      }
     };
 
     this.init = () => {
@@ -46,15 +78,15 @@ class FollowMyCursor {
       return
     }
     this.targetElement.style.display = 'none'
-    this.targetElement.style.top = (window.innerHeight / 2) + 'px'
-    this.targetElement.style.left = (window.innerWidth / 2) + 'px'
+    this.targetElement.style.top = (this.config.startPosition.Y) + 'px'
+    this.targetElement.style.left = (this.config.startPosition.X) + 'px'
     this.targetElement.style.position = 'absolute'
     this.targetElement.style.pointerEvents = 'none'
-    const invalid_keys = this.get_invalid_keys(custom_config)
-    if (invalid_keys.length) {
-      console.error(`Config has invalid keys: ${invalid_keys}.`)
+    const isValid = this.validateConfig(customConfig)
+    if (!isValid) {
       return
     }
+    this.updateConfig(customConfig)
     this.init()
   }
 
