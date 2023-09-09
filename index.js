@@ -1,6 +1,5 @@
 class FollowMyCursor {
   constructor(id, custom_config = {}) {
-    console.log("here1")
     // Global variables
     this.targetElement = null
     this.cursor = {
@@ -12,23 +11,19 @@ class FollowMyCursor {
     this.config = {
       delay: 0.1,
     };
-    console.log("here2")
     // functions
     this.updateMousePosition = (event) => {
-      console.log("update mouse")
       this.cursor.mouseX = event.clientX
       this.cursor.mouseY = event.clientY
       this.targetElement.style.display = 'block'
     };
 
     this.updateBlobPosition = () => {
-      console.log("update blob")
       this.cursor.interpolatedX += (this.cursor.mouseX - this.cursor.interpolatedX) * this.config.delay
       this.cursor.interpolatedY += (this.cursor.mouseY - this.cursor.interpolatedY) * this.config.delay
       this.targetElement.style.left = this.cursor.interpolatedX + 'px'
       this.targetElement.style.top = this.cursor.interpolatedY + 'px'
       this.targetElement.style.position = 'absolute'
-      console.log(this.targetElement.style.position, 123123);
       requestAnimationFrame(this.updateBlobPosition)
     };
 
@@ -39,7 +34,6 @@ class FollowMyCursor {
     };
 
     this.init = () => {
-      console.log("init")
       document.addEventListener('mousemove', this.updateMousePosition)
       this.updateBlobPosition()
     };
@@ -56,7 +50,6 @@ class FollowMyCursor {
     this.targetElement.style.left = (window.innerWidth / 2) + 'px'
     this.targetElement.style.position = 'absolute'
     this.targetElement.style.pointerEvents = 'none'
-    console.log("here5")
     const invalid_keys = this.get_invalid_keys(custom_config)
     if (invalid_keys.length) {
       console.error(`Config has invalid keys: ${invalid_keys}.`)
