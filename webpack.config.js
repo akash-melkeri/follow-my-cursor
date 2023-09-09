@@ -1,9 +1,10 @@
 const path = require('path');
 
 module.exports = {
-  entry: './follow-my-cursor.js',
+  mode:'production',
+  entry: './index.js',
   output: {
-    filename: 'follow-my-cursor.js',
+    filename: 'index.js',
     path: path.resolve(__dirname, 'dist'),
     library: 'followMyCursor',
     libraryTarget: 'umd',
@@ -19,4 +20,4 @@ module.exports = {
       },
     ],
   },
-};
+}
