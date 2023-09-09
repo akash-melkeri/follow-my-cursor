@@ -1,57 +1,66 @@
-// Global variables
-let targetElement = null
-const cursor = {
-  mouseX:0,
-  mouseY:0,
-  interpolatedX:0,
-  interpolatedY:0,
-}
-const config = {
-  delay:0.1
-}
-
-// functions
-function updateMousePosition(event){
-  cursor.mouseX = event.clientX
-  cursor.mouseY = event.clientY
-}
-function updateBlobPosition(){
-  cursor.interpolatedX += (cursor.mouseX - cursor.interpolatedX) * config.delay
-  cursor.interpolatedY += (cursor.mouseY - cursor.interpolatedY) * config.delay
-  targetElement.style.left = cursor.interpolatedX +'px'
-  targetElement.style.top = cursor.interpolatedY +'px'
-  requestAnimationFrame(updateBlobPosition)
-}
-function get_invalid_keys(custom_config){
-  let keys1 = Object.keys(config)
-  let keys2 = Object.keys(custom_config)
-  return keys2.filter(e=>!keys1.includes(e))
-}
-function init(){
-  document.addEventListener('mousemove', updateMousePosition)
-  updateBlobPosition()
-}
-
 class FollowMyCursor {
   constructor(id, custom_config = {}) {
-    targetElement = document.getElementById(id)
-    // setting styles of follower div
-    targetElement.style.position = 'absolute'
-    targetElement.style.pointerEvents = 'none'
+    // Global variables
+    this.targetElement = null
+    this.cursor = {
+      mouseX: window.innerWidth / 2,
+      mouseY: window.innerHeight / 2,
+      interpolatedX: window.innerWidth / 2,
+      interpolatedY: window.innerHeight / 2,
+    };
+    this.config = {
+      delay: 0.1,
+    };
 
-    if (!targetElement) {
+    // functions
+    this.updateMousePosition = (event) => {
+      this.cursor.mouseX = event.clientX
+      this.cursor.mouseY = event.clientY
+      this.targetElement.style.display = 'block'
+    };
+
+    this.updateBlobPosition = () => {
+      this.cursor.interpolatedX += (this.cursor.mouseX - this.cursor.interpolatedX) * this.config.delay
+      this.cursor.interpolatedY += (this.cursor.mouseY - this.cursor.interpolatedY) * this.config.delay
+      this.targetElement.style.left = this.cursor.interpolatedX + 'px'
+      this.targetElement.style.top = this.cursor.interpolatedY + 'px'
+      requestAnimationFrame(this.updateBlobPosition)
+    };
+
+    this.get_invalid_keys = (custom_config) => {
+      const keys1 = Object.keys(this.config)
+      const keys2 = Object.keys(custom_config)
+      return keys2.filter((e) => !keys1.includes(e))
+    };
+
+    this.init = () => {
+      document.addEventListener('mousemove', this.updateMousePosition)
+      this.updateBlobPosition()
+    };
+
+    this.targetElement = document.getElementById(id)
+
+    // Setting styles of follower div
+    if (!this.targetElement) {
       console.error(`Element with id ${id} not found.`)
       return
     }
-    let invalid_keys = get_invalid_keys(custom_config)
-    if(invalid_keys,length){
-      console.error(`Config has invalid keys : ${invalid_keys}.`)
+    this.targetElement.style.display = 'none'
+    this.targetElement.style.position = 'absolute'
+    this.targetElement.style.top = (window.innerHeight / 2) + 'px'
+    this.targetElement.style.left = (window.innerWidth / 2) + 'px'
+    this.targetElement.style.pointerEvents = 'none'
+
+    const invalid_keys = this.get_invalid_keys(custom_config)
+    if (invalid_keys.length) {
+      console.error(`Config has invalid keys: ${invalid_keys}.`)
       return
     }
-    init()
+    this.init()
   }
-  unmount(){
-    document.removeEventListener('mousemove', updateMousePosition)
+
+  unmount() {
+    document.removeEventListener('mousemove', this.updateMousePosition)
   }
 }
 
