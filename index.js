@@ -35,6 +35,9 @@ function init(){
 class FollowMyCursor {
   constructor(id, custom_config = {}) {
     targetElement = document.getElementById(id)
+    // setting styles of follower div
+    targetElement.style.position = 'absolute'
+    targetElement.style.pointerEvents = 'none'
 
     if (!targetElement) {
       console.error(`Element with id ${id} not found.`)
