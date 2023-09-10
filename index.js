@@ -89,7 +89,6 @@ class FollowMyCursor {
     if (!isValid) {
       return;
     }
-    this.updateConfig(customConfig);
     this.init();
   }
 
