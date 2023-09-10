@@ -64,7 +64,6 @@ class FollowMyCursor {
           this.config.startPosition = customConfig.startPosition;
         }
       }
-      console.log("123123");
       return noError;
     };
 
