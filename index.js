@@ -42,7 +42,7 @@ class FollowMyCursor {
       }
       let customConfigKeys = Object.keys(customConfig)
       if(customConfigKeys.includes('delay')){
-        if(typeof customConfig.delay == 'number'){
+        if(typeof customConfig.delay != 'number'){
           console.error(`Delay value must be a number.`)
           noError = noError && false
         }else if(customConfig.delay < 0 && customConfig.delay > 1){
@@ -53,10 +53,10 @@ class FollowMyCursor {
         }
       }
       if(customConfigKeys.includes('startPosition')){
-        if(typeof customConfig.startPosition == 'object'){
+        if(typeof customConfig.startPosition != 'object'){
           console.error(`Start position value must be an object.`)
           noError = noError && false
-        }else if(typeof customConfig.startPosition.X == 'number' && typeof customConfig.startPosition.Y == 'number'){
+        }else if(typeof customConfig.startPosition.X != 'number' && typeof customConfig.startPosition.Y != 'number'){
           console.error(`Start position values(X, Y) must be numbers.`)
           noError = noError && false
         }else{
